@@ -1,6 +1,7 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using SolitaireTest.Assets.Scripts.View;
+using SolitaireTest.Assets.Scripts.Utilities;
 
 namespace SolitaireTest.Assets.Scripts
 {
