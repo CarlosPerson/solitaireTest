@@ -4,23 +4,31 @@ namespace SolitaireTest.Assets.Scripts.Model
 {
     public class Card
     {
-        public string Name { get; set; }  // e.g., "Ace of Spades"
+        public string Rank { get; private set; }
+        public string Suit { get; private set; }
         public IPile CurrentPile { get; set; }
 
-        public Card(string name, IPile initialPile)
+        public string Name => $"{Rank} of {Suit}";
+
+        public Card(string rank, string suit, IPile initialPile)
         {
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(rank))
             {
-                Debug.LogError($"Card name cannot be null or empty. Card: {name}");
+                Debug.LogError($"Card rank cannot be null or empty. Card: {rank}");
+                return;
+            }
+            if (string.IsNullOrEmpty(suit))
+            {
+                Debug.LogError($"Card suit cannot be null or empty. Card: {suit}");
                 return;
             }
             if (initialPile == null)
             {
-                Debug.LogError($"Initial pile cannot be null. Card: {name}");
+                Debug.LogError($"Initial pile cannot be null. Card: {Name}");
                 return;
             }
-
-            Name = name;
+            Rank = rank;
+            Suit = suit;
             CurrentPile = initialPile;
             initialPile.AddCard(this);
         }
