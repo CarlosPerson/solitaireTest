@@ -17,24 +17,32 @@ public class SolitaireManager : MonoBehaviour
 
     void GenerateDeck()
     {
-        for (int i = 0; i < 52; i++)
+        string[] suits = { "Hearts", "Diamonds", "Clubs", "Spades" };
+        string[] ranks = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
+        for (int i = 0; i < suits.Length; i++)
         {
-            GameObject card = Instantiate(cardPrefab);
-            card.name = "Card " + i;
-            card.transform.SetParent(transform);
-            card.transform.localScale = Vector3.one;
-            card.AddComponent<CanvasGroup>();
-            card.AddComponent<DraggableCard>();
-            cards.Add(card);
+            for (int j = 0; j < ranks.Length; j++)
+            {
+                GameObject card = Instantiate(cardPrefab);
+                card.name = $"{ranks[j]} of {suits[i]}";
+                card.transform.SetParent(transform);
+                card.transform.localScale = Vector3.one;
+                CardView cardView = card.GetComponent<CardView>();
+                cardView.Setup(ranks[j], suits[i]);
+                cards.Add(card);
+            }
         }
     }
 
     void DealCards()
     {
-        for (int i = 0; i < stacks.Length && i < cards.Count; i++)
+        cards.Shuffle();
+        foreach (GameObject card in cards)
         {
-            cards[i].transform.SetParent(stacks[i]);
-            cards[i].transform.localPosition = Vector3.zero;
+            int stackIndex = UnityEngine.Random.Range(0, stacks.Length);
+            card.transform.SetParent(stacks[stackIndex]);
+            card.transform.localPosition = Vector3.zero;
         }
     }
+
 }
