@@ -2,51 +2,60 @@ using UnityEngine;
 using System.Collections.Generic;
 using SolitaireTest.Assets.Scripts.View;
 using SolitaireTest.Assets.Scripts.Utilities;
+using SolitaireTest.Assets.Scripts.Model;
+using System;
 
 namespace SolitaireTest.Assets.Scripts
 {
     public class SolitaireManager : MonoBehaviour
     {
-        public GameObject cardPrefab;
-        public Transform[] stacks;
+        [SerializeField] private GameObject _cardPrefab, _pilePrefab;
+        [SerializeField] private Transform _pileParent;
+        private List<GameObject> _cardGOs = new List<GameObject>();
+        private Dictionary<string, GameObject> _pileNameToGOs = new Dictionary<string, GameObject>();
+        private List<Card> _cardModels;
+        private List<IPile> _pileModels;
 
-        private List<GameObject> cards = new List<GameObject>();
-
-        void Start()
+        public void Setup(List<Card> cardModels, List<IPile> pileModels)
         {
-            GenerateDeck();
-            DealCards();
+            if (cardModels == null || pileModels == null)
+            {
+                Debug.LogError("Card models or stack models cannot be null.");
+                return;
+            }
+            _cardModels = cardModels;
+            _pileModels = pileModels;
+
+            InstantiatePileGOs();
+            InstantiateCardGOs();
         }
 
-        void GenerateDeck()
+        private void InstantiatePileGOs()
         {
-            string[] suits = { "Hearts", "Diamonds", "Clubs", "Spades" };
-            string[] ranks = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
-            for (int i = 0; i < suits.Length; i++)
+            foreach (IPile pile in _pileModels)
             {
-                for (int j = 0; j < ranks.Length; j++)
+                GameObject pileGO = new GameObject(pile.Name);
+                pileGO.transform.SetParent(_pileParent, false);
+                _pileNameToGOs[pile.Name] = pileGO;
+            }
+        }
+
+        void InstantiateCardGOs()
+        {
+            foreach (Card card in _cardModels)
+            {
+                GameObject cardGO = Instantiate(_cardPrefab);
+                CardView cardView = cardGO.GetComponent<CardView>();
+                if (cardView != null)
                 {
-                    GameObject card = Instantiate(cardPrefab);
-                    card.name = $"{ranks[j]} of {suits[i]}";
-                    card.transform.SetParent(transform);
-                    card.transform.localScale = Vector3.one;
-                    CardView cardView = card.GetComponent<CardView>();
-                    cardView.Setup(ranks[j], suits[i]);
-                    cards.Add(card);
+                    cardView.Setup(card.Rank, card.Suit, _pileNameToGOs[card.CurrentPile.Name]);
                 }
+                else
+                {
+                    Debug.LogError("CardView component is missing on the prefab.");
+                }
+                _cardGOs.Add(cardGO);
             }
         }
-
-        void DealCards()
-        {
-            cards.Shuffle();
-            foreach (GameObject card in cards)
-            {
-                int stackIndex = UnityEngine.Random.Range(0, stacks.Length);
-                card.transform.SetParent(stacks[stackIndex]);
-                card.transform.localPosition = Vector3.zero;
-            }
-        }
-
     }
 }

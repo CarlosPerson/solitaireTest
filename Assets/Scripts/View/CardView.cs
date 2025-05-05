@@ -8,8 +8,7 @@ namespace SolitaireTest.Assets.Scripts.View
         [SerializeField] private TextMeshProUGUI _rankText;
         [SerializeField] private TextMeshProUGUI _suitText;
 
-
-        public void Setup(string rank, string suit)
+        public void Setup(string rank, string suit, GameObject initialPileGO)
         {
             if (_rankText == null)
             {
@@ -23,6 +22,9 @@ namespace SolitaireTest.Assets.Scripts.View
             }
             _rankText.text = rank;
             _suitText.text = suit;
+
+            gameObject.name = $"{rank} of {suit} GO";
+            transform.SetParent(initialPileGO.transform, false);
         }
     }
 }
