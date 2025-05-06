@@ -129,7 +129,7 @@ namespace SolitaireTest.Assets.Scripts.Controller
         }
 
 
-        private void OnCardAddedToPileUseCase(Card card, IPile pile)
+        private void OnCardAddedToPileUseCase(ICard card, IPile pile)
         {
             if (_pileNameToGOs.TryGetValue(pile.Name, out GameObject pileGO))
             {

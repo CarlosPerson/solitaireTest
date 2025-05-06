@@ -6,10 +6,10 @@ namespace SolitaireTest.Assets.Scripts.Model
     public interface IPile
     {
         string Name { get; }
-        IList<Card> Cards { get; }
-        event Action<Card, IPile> OnCardAdded;
+        IList<ICard> Cards { get; }
+        event Action<ICard, IPile> OnCardAdded;
 
-        void AddCard(Card card);
-        void RemoveCard(Card card);
+        void AddCard(ICard card);
+        void RemoveCard(ICard card);
     }
 }

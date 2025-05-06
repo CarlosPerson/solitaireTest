@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SolitaireTest.Assets.Scripts.Model
 {
-    public class Card
+    public class Card : ICard
     {
         public string Rank { get; private set; }
         public string Suit { get; private set; }
@@ -10,7 +10,7 @@ namespace SolitaireTest.Assets.Scripts.Model
 
         public string Name => $"{Rank} of {Suit}";
 
-        public Card(string rank, string suit, IPile initialPile)
+        public Card(string rank, string suit)
         {
             if (string.IsNullOrEmpty(rank))
             {
@@ -22,15 +22,8 @@ namespace SolitaireTest.Assets.Scripts.Model
                 Debug.LogError($"Card suit cannot be null or empty. Card: {suit}");
                 return;
             }
-            if (initialPile == null)
-            {
-                Debug.LogError($"Initial pile cannot be null. Card: {Name}");
-                return;
-            }
             Rank = rank;
             Suit = suit;
-            CurrentPile = initialPile;
-            initialPile.AddCard(this);
         }
     }
 }

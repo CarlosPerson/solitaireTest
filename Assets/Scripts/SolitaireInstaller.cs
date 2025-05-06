@@ -39,7 +39,8 @@ public class SolitaireInstaller : MonoBehaviour
         {
             for (int j = 0; j < ranks.Length; j++)
             {
-                Card card = new Card(ranks[j], suits[i], defaultPile);
+                Card card = new Card(ranks[j], suits[i]);
+                defaultPile.AddCard(card);
                 cardModels.Add(card);
             }
         }
