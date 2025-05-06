@@ -228,6 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cad5db3926347247ab48b366b9fcc72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _canvasGroup: {fileID: 3055799750117596852}
 --- !u!114 &7401515837674401300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,6 +243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rankText: {fileID: 672319352867536463}
   _suitText: {fileID: 564267340996853}
+  _draggableCard: {fileID: 4467978328320167161}
 --- !u!225 &3055799750117596852
 CanvasGroup:
   m_ObjectHideFlags: 0

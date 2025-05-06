@@ -1,26 +1,30 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
 
 namespace SolitaireTest.Assets.Scripts.View
 {
     public class DraggableCard : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
+        [SerializeField] private CanvasGroup _canvasGroup;
         private Vector3 startPosition;
         private Transform originalParent;
-        private CanvasGroup canvasGroup;
+        private Action _onPickCallback;
+        private Action<GameObject> _onDropCallback;
 
-        void Awake()
+        public void SetCallbacks(Action onPickCallback, Action<GameObject> onDropCallback)
         {
-            canvasGroup = GetComponent<CanvasGroup>();
+            _onPickCallback = onPickCallback;
+            _onDropCallback = onDropCallback;
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
             startPosition = transform.position;
             originalParent = transform.parent;
-            canvasGroup.blocksRaycasts = false;
+            _canvasGroup.blocksRaycasts = false;
             transform.SetParent(transform.root); // Bring to top
+            _onPickCallback?.Invoke();
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -30,18 +34,26 @@ namespace SolitaireTest.Assets.Scripts.View
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            canvasGroup.blocksRaycasts = true;
+            _canvasGroup.blocksRaycasts = true;
             GameObject hitObject = eventData.pointerEnter;
-            if (hitObject != null && hitObject.transform != originalParent)
-            {
-                transform.SetParent(hitObject.transform);
-                transform.localPosition = Vector3.zero;
-            }
-            else
-            {
-                transform.SetParent(originalParent);
-                transform.position = startPosition;
-            }
+            _onDropCallback?.Invoke(hitObject);
+        }
+
+        public void ResetPosition()
+        {
+            transform.SetParent(originalParent);
+            transform.position = startPosition;
+        }
+
+        public void SetPositionToPile(GameObject pileGO)
+        {
+            transform.SetParent(pileGO.transform);
+            transform.localPosition = Vector3.zero;
+        }
+
+        public void SetInteractable(bool isInteractable)
+        {
+            _canvasGroup.blocksRaycasts = isInteractable;
         }
     }
 }

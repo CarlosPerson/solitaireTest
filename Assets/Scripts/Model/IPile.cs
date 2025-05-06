@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace SolitaireTest.Assets.Scripts.Model
@@ -6,6 +7,7 @@ namespace SolitaireTest.Assets.Scripts.Model
     {
         string Name { get; }
         IList<Card> Cards { get; }
+        event Action<Card, IPile> OnCardAdded;
 
         void AddCard(Card card);
         void RemoveCard(Card card);
