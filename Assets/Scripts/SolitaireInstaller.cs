@@ -1,18 +1,20 @@
-
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using SolitaireTest.Assets.Scripts;
+using SolitaireTest.Assets.Scripts.Controller;
 using SolitaireTest.Assets.Scripts.Model;
 using UnityEngine;
 
 public class SolitaireInstaller : MonoBehaviour
 {
-    [SerializeField] private SolitaireManager _solitaireManager;
+    [SerializeField] private SolitaireController _solitaireManager;
     public void Start()
     {
+        if (_solitaireManager == null)
+        {
+            Debug.LogError("SolitaireManager is not assigned in the inspector.");
+            return;
+        }
         List<IPile> pileModels = InstantiatePileModels();
-        List<Card> cardModels = InstantiateCardModels(pileModels.FirstOrDefault());
+        List<Card> cardModels = InstantiateCardModels(pileModels.Find(x=> x.Name == "DeckPile"));
         _solitaireManager.Setup(cardModels, pileModels);
     }
 

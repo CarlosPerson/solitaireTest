@@ -1,13 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 using SolitaireTest.Assets.Scripts.View;
-using SolitaireTest.Assets.Scripts.Utilities;
 using SolitaireTest.Assets.Scripts.Model;
-using System;
 
-namespace SolitaireTest.Assets.Scripts
+namespace SolitaireTest.Assets.Scripts.Controller
 {
-    public class SolitaireManager : MonoBehaviour
+    public class SolitaireController : MonoBehaviour
     {
         [SerializeField] private GameObject _cardPrefab, _pilePrefab;
         [SerializeField] private Transform _pileParent;
@@ -18,6 +16,11 @@ namespace SolitaireTest.Assets.Scripts
 
         public void Setup(List<Card> cardModels, List<IPile> pileModels)
         {
+            if (_cardPrefab == null || _pilePrefab == null || _pileParent == null)
+            {
+                Debug.LogError("Card prefab, pile prefab, or pile parent is not assigned in the inspector.");
+                return;
+            }
             if (cardModels == null || pileModels == null)
             {
                 Debug.LogError("Card models or stack models cannot be null.");
