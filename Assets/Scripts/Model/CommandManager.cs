@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using SolitaireTest.Assets.Scripts.Model;
 
-public class CommandManager
+public class CommandManager : ICommandManager
 {
     private Stack<ICommand> commandStack = new Stack<ICommand>();
 

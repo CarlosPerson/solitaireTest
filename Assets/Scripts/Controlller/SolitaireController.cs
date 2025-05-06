@@ -10,13 +10,15 @@ namespace SolitaireTest.Assets.Scripts.Controller
     {
         [SerializeField] private GameObject _cardPrefab, _pilePrefab;
         [SerializeField] private Transform _pileParent;
+        [SerializeField] private UndoView _undoView;
         private List<CardView> _cardViews = new List<CardView>();
         private List<GameObject> _pileGOs = new List<GameObject>();
         private Dictionary<string, GameObject> _pileNameToGOs = new Dictionary<string, GameObject>();
         private List<Card> _cardModels;
         private List<IPile> _pileModels;
+        private ICommandManager _commandManager;
 
-        public void Setup(List<Card> cardModels, List<IPile> pileModels)
+        public void Setup(List<Card> cardModels, List<IPile> pileModels, ICommandManager commandManager)
         {
             if (_cardPrefab == null || _pilePrefab == null || _pileParent == null)
             {
@@ -30,6 +32,7 @@ namespace SolitaireTest.Assets.Scripts.Controller
             }
             _cardModels = cardModels;
             _pileModels = pileModels;
+            _commandManager = commandManager;
 
             InstantiatePileGOs();
             InstantiateCardGOs();
@@ -79,6 +82,7 @@ namespace SolitaireTest.Assets.Scripts.Controller
             {
                 pile.OnCardAdded += OnCardAddedToPileUseCase;
             }
+            _undoView.OnUndoButtonClicked += OnUndoRequestedUseCase;
         }
 
         private void OnCardPickedUseCase(CardView cardView)
@@ -107,10 +111,9 @@ namespace SolitaireTest.Assets.Scripts.Controller
             {
                 if (_pileNameToGOs.TryGetValue(pileView.PileName, out GameObject pileGO))
                 {
-                    cardView.transform.SetParent(pileGO.transform, false);
                     IPile targetPile = _pileModels.Find(p => p.Name == pileView.PileName);
                     Card cardModel = _cardModels.Find(x => x.Rank == cardView.Rank && x.Suit == cardView.Suit);
-                    targetPile.AddCard(cardModel);
+                    _commandManager.ExecuteCommand(new MoveCardCommand(cardModel, targetPile));
                 }
                 else
                 {
@@ -145,6 +148,9 @@ namespace SolitaireTest.Assets.Scripts.Controller
                 Debug.LogError($"No pile found with name: {pile.Name}");
             }
         }
-
+        private void OnUndoRequestedUseCase()
+        {
+            _commandManager.UndoLastCommand();
+        }
     }
 }

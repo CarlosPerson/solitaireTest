@@ -15,7 +15,7 @@ public class SolitaireInstaller : MonoBehaviour
         }
         List<IPile> pileModels = InstantiatePileModels();
         List<Card> cardModels = InstantiateCardModels(pileModels.Find(x=> x.Name == "DeckPile"));
-        _solitaireManager.Setup(cardModels, pileModels);
+        _solitaireManager.Setup(cardModels, pileModels, new CommandManager());
     }
 
     private List<IPile> InstantiatePileModels()
