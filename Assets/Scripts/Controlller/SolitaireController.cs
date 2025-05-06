@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using SolitaireTest.Assets.Scripts.View;
 using SolitaireTest.Assets.Scripts.Model;
-using System;
 
 namespace SolitaireTest.Assets.Scripts.Controller
 {
@@ -105,7 +104,7 @@ namespace SolitaireTest.Assets.Scripts.Controller
             if (hitObject == null)
             {
                 cardView.ResetPosition();
-                Debug.LogError($"No object hit with drop");
+                Debug.Log($"No object hit with drop");
             }
             else if (hitObject.TryGetComponent<PileView>(out PileView pileView))
             {
@@ -124,7 +123,7 @@ namespace SolitaireTest.Assets.Scripts.Controller
             else
             {
                 cardView.ResetPosition();
-                Debug.LogError($"No PileView component found on the hit object: {hitObject.name}");
+                Debug.Log($"No PileView component found on the hit object: {hitObject.name}");
             }
         }
 
